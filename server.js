@@ -16,8 +16,7 @@ mongoose.Promise = global.Promise;
 app.get('/posts', (req, res) => {
 	blogPost.find( ).exec( ).then(posts => {
 		res.json(posts.map(post => post.apiRepr( )));
-	});
-	.catch(err => {
+	}).catch(err => {
 		console.error(err);
 		res.status(500).json({error: 'Oops, not quite'});
 	});
@@ -42,12 +41,14 @@ app.post('/posts', (req, res) => {
       return res.status(400).send(message);
     };
   };
+
+  
   blogPost
     .create({
       title: req.body.title,
       content: req.body.content,
       author: req.body.author
-    });
+    })
     .then(blogPost => res.status(201).json(blogPost.apiRepr()))
     .catch(err => {
         console.error(err);
@@ -86,13 +87,13 @@ app.put('/posts/:id', (req, res) => {
     .catch(err => res.status(500).json({message: 'Oops not quite'}));
 });
 
-app.delete('/:id', (req, res) => {
-  blogPosts.findByIdAndRemove(req.params.id).exec( )
-    .then(( ) => {
-      console.log(`Deleted blog post with id \`${req.params.ID}\``);
-      res.status(204).end();
-    });
-});
+// app.delete('/:id', (req, res) => {
+//   blogPosts.findByIdAndRemove(req.params.id).exec( )
+//     .then(( ) => {
+//       console.log(`Deleted blog post with id \`${req.params.ID}\``);
+//       res.status(204).end();
+//     });
+// });
 
 app.use('*', function(req, res) {
   res.status(404).json({message: 'Not Found'});
